@@ -1,7 +1,7 @@
 {
-  "name": "Backend",
+  "name": "backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/server.js",
   "engines": {
     "node": "18.x"
   },
@@ -9,8 +9,9 @@
   "scripts": {
     "start": "node dist/server.js",
     "dev": "ts-node-dev src/server.ts",
-    "build": "tsc && npx prisma migrate deploy",
-    "migrate-deploy": "npx prisma migrate deploy"
+    "migrate-deploy": "npx prisma migrate deploy",
+    "build": "tsc && npx prisma migrate deploy"
+    
   }
   ,
   "devDependencies": {
