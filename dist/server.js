@@ -5,21 +5,29 @@ var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
+  if ((from && typeof from === "object") || typeof from === "function") {
     for (let key of __getOwnPropNames(from))
       if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+        __defProp(to, key, {
+          get: () => from[key],
+          enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable,
+        });
   }
   return to;
 };
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-  // If the importer is in node compatibility mode or this is not an ESM
-  // file that has been converted to a CommonJS file using a Babel-
-  // compatible transform (i.e. "__esModule" has not been set), then set
-  // "default" to the CommonJS "module.exports" for node compatibility.
-  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-  mod
-));
+var __toESM = (mod, isNodeMode, target) => (
+  (target = mod != null ? __create(__getProtoOf(mod)) : {}),
+  __copyProps(
+    // If the importer is in node compatibility mode or this is not an ESM
+    // file that has been converted to a CommonJS file using a Babel-
+    // compatible transform (i.e. "__esModule" has not been set), then set
+    // "default" to the CommonJS "module.exports" for node compatibility.
+    isNodeMode || !mod || !mod.__esModule
+      ? __defProp(target, "default", { value: mod, enumerable: true })
+      : target,
+    mod
+  )
+);
 var __async = (__this, __arguments, generator) => {
   return new Promise((resolve2, reject) => {
     var fulfilled = (value) => {
@@ -36,7 +44,10 @@ var __async = (__this, __arguments, generator) => {
         reject(e);
       }
     };
-    var step = (x) => x.done ? resolve2(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
+    var step = (x) =>
+      x.done
+        ? resolve2(x.value)
+        : Promise.resolve(x.value).then(fulfilled, rejected);
     step((generator = generator.apply(__this, __arguments)).next());
   });
 };
@@ -66,8 +77,8 @@ var CreateUserService = class {
       }
       const userAlreadyExists = yield prisma_default.user.findFirst({
         where: {
-          email
-        }
+          email,
+        },
       });
       if (userAlreadyExists) {
         throw new Error("Usu\xE1rio j\xE1 existe, bobalhon!");
@@ -77,13 +88,13 @@ var CreateUserService = class {
         data: {
           name,
           email,
-          password: passwordHash
+          password: passwordHash,
         },
         select: {
           id: true,
           name: true,
-          email: true
-        }
+          email: true,
+        },
       });
       return user;
     });
@@ -99,7 +110,7 @@ var CreateUserController = class {
       const user = yield createUserService.execute({
         name,
         email,
-        password
+        password,
       });
       return res.json(user);
     });
@@ -114,32 +125,35 @@ var AuthUserService = class {
     return __async(this, arguments, function* ({ email, password }) {
       const user = yield prisma_default.user.findFirst({
         where: {
-          email
-        }
+          email,
+        },
       });
       if (!user) {
         throw new Error("Usuario ou senha incorretos");
       }
-      const passwordMatch = yield (0, import_bcryptjs2.compare)(password, user.password);
+      const passwordMatch = yield (0, import_bcryptjs2.compare)(
+        password,
+        user.password
+      );
       if (!passwordMatch) {
         throw new Error("Usuario ou senha incorretos");
       }
       const token = (0, import_jsonwebtoken.sign)(
         {
           name: user.name,
-          email: user.email
+          email: user.email,
         },
         process.env.JWT_SECRET,
         {
           subject: user.id,
-          expiresIn: "30d"
+          expiresIn: "30d",
         }
       );
       return {
         id: user.id,
         name: user.name,
         email: user.email,
-        token
+        token,
       };
     });
   }
@@ -153,7 +167,7 @@ var AuthUserController = class {
       const authUserService = new AuthUserService();
       const auth = yield authUserService.execute({
         email,
-        password
+        password,
       });
       return res.json(auth);
     });
@@ -166,13 +180,13 @@ var DetailUserService = class {
     return __async(this, null, function* () {
       const user = yield prisma_default.user.findFirst({
         where: {
-          id: user_id
+          id: user_id,
         },
         select: {
           id: true,
           name: true,
-          email: true
-        }
+          email: true,
+        },
       });
       return user;
     });
@@ -200,12 +214,12 @@ var CreateCategoryService = class {
       }
       const category = yield prisma_default.category.create({
         data: {
-          name
+          name,
         },
         select: {
           id: true,
-          name: true
-        }
+          name: true,
+        },
       });
       return category;
     });
@@ -219,7 +233,7 @@ var CreateCategoryController = class {
       const createCategoryService = new CreateCategoryService();
       const { name } = req.body;
       const category = yield createCategoryService.execute({
-        name
+        name,
       });
       return res.json(category);
     });
@@ -233,8 +247,8 @@ var ListCategoryService = class {
       const category = yield prisma_default.category.findMany({
         select: {
           id: true,
-          name: true
-        }
+          name: true,
+        },
       });
       return category;
     });
@@ -255,18 +269,22 @@ var ListCategoryController = class {
 // src/services/products/CreateProductService.ts
 var CreateProductService = class {
   execute(_0) {
-    return __async(this, arguments, function* ({ name, price, description, banner, category_id }) {
-      const product = yield prisma_default.product.create({
-        data: {
-          name,
-          price,
-          description,
-          banner,
-          category_id
-        }
-      });
-      return product;
-    });
+    return __async(
+      this,
+      arguments,
+      function* ({ name, price, description, banner, category_id }) {
+        const product = yield prisma_default.product.create({
+          data: {
+            name,
+            price,
+            description,
+            banner,
+            category_id,
+          },
+        });
+        return product;
+      }
+    );
   }
 };
 
@@ -285,7 +303,7 @@ var CreateProductController = class {
           price,
           description,
           banner,
-          category_id
+          category_id,
         });
         return res.json(product);
       }
@@ -299,8 +317,8 @@ var ListByCategoryService = class {
     return __async(this, arguments, function* ({ category_id }) {
       const findByCategory = yield prisma_default.product.findMany({
         where: {
-          category_id
-        }
+          category_id,
+        },
       });
       return findByCategory;
     });
@@ -314,7 +332,7 @@ var ListByCategoryController = class {
       const category_id = req.query.category_id;
       const listByCategory = new ListByCategoryService();
       const products = yield listByCategory.execute({
-        category_id
+        category_id,
       });
       return res.json(products);
     });
@@ -328,8 +346,8 @@ var CreateOrderService = class {
       const order = yield prisma_default.order.create({
         data: {
           table,
-          name
-        }
+          name,
+        },
       });
       return order;
     });
@@ -344,7 +362,7 @@ var CreateOrderController = class {
       const createOrderService = new CreateOrderService();
       const order = yield createOrderService.execute({
         table,
-        name
+        name,
       });
       return res.json(order);
     });
@@ -357,8 +375,8 @@ var RemoveOrderService = class {
     return __async(this, arguments, function* ({ order_id }) {
       const order = yield prisma_default.order.delete({
         where: {
-          id: order_id
-        }
+          id: order_id,
+        },
       });
       return order;
     });
@@ -372,7 +390,7 @@ var RemoveOrderController = class {
       const order_id = req.query.order_id;
       const removeOrder = new RemoveOrderService();
       const order = yield removeOrder.execute({
-        order_id
+        order_id,
       });
       return res.json(order);
     });
@@ -382,16 +400,20 @@ var RemoveOrderController = class {
 // src/services/order/AddItemService.ts
 var AddItemService = class {
   execute(_0) {
-    return __async(this, arguments, function* ({ order_id, product_id, amount }) {
-      const order = yield prisma_default.item.create({
-        data: {
-          order_id,
-          product_id,
-          amount
-        }
-      });
-      return order;
-    });
+    return __async(
+      this,
+      arguments,
+      function* ({ order_id, product_id, amount }) {
+        const order = yield prisma_default.item.create({
+          data: {
+            order_id,
+            product_id,
+            amount,
+          },
+        });
+        return order;
+      }
+    );
   }
 };
 
@@ -404,7 +426,7 @@ var AddItemController = class {
       const order = yield addItem.execute({
         order_id,
         product_id,
-        amount
+        amount,
       });
       return res.json(order);
     });
@@ -417,8 +439,8 @@ var RemoveItemService = class {
     return __async(this, arguments, function* ({ item_id }) {
       const order = yield prisma_default.item.delete({
         where: {
-          id: item_id
-        }
+          id: item_id,
+        },
       });
       return order;
     });
@@ -432,7 +454,7 @@ var RemoveItemController = class {
       const item_id = req.query.item_id;
       const removeItemService = new RemoveItemService();
       const order = yield removeItemService.execute({
-        item_id
+        item_id,
       });
       return res.json(order);
     });
@@ -445,11 +467,11 @@ var SendOrderService = class {
     return __async(this, arguments, function* ({ order_id }) {
       const order = yield prisma_default.order.update({
         where: {
-          id: order_id
+          id: order_id,
         },
         data: {
-          draft: false
-        }
+          draft: false,
+        },
       });
       return order;
     });
@@ -463,7 +485,7 @@ var SendOrderController = class {
       const { order_id } = req.body;
       const sendOrder = new SendOrderService();
       const order = yield sendOrder.execute({
-        order_id
+        order_id,
       });
       return res.json(order);
     });
@@ -477,11 +499,11 @@ var ListOrderService = class {
       const orders = yield prisma_default.order.findMany({
         where: {
           draft: false,
-          status: false
+          status: false,
         },
         orderBy: {
-          created_at: "desc"
-        }
+          created_at: "desc",
+        },
       });
       return orders;
     });
@@ -505,12 +527,12 @@ var DetailOrderService = class {
     return __async(this, arguments, function* ({ order_id }) {
       const orders = yield prisma_default.item.findMany({
         where: {
-          order_id
+          order_id,
         },
         include: {
           product: true,
-          order: true
-        }
+          order: true,
+        },
       });
       return orders;
     });
@@ -524,7 +546,7 @@ var DetailOrderController = class {
       const order_id = req.query.order_id;
       const detailOrderService = new DetailOrderService();
       const orders = yield detailOrderService.execute({
-        order_id
+        order_id,
       });
       return res.json(orders);
     });
@@ -537,11 +559,11 @@ var FinishOrderService = class {
     return __async(this, arguments, function* ({ order_id }) {
       const order = yield prisma_default.order.update({
         where: {
-          id: order_id
+          id: order_id,
         },
         data: {
-          status: true
-        }
+          status: true,
+        },
       });
       return order;
     });
@@ -555,7 +577,7 @@ var FinishOrderController = class {
       const { order_id } = req.body;
       const finishOrderService = new FinishOrderService();
       const order = yield finishOrderService.execute({
-        order_id
+        order_id,
       });
       return res.json(order);
     });
@@ -592,13 +614,15 @@ var multer_default = {
       storage: import_multer.default.diskStorage({
         destination: (0, import_path.resolve)(__dirname, "..", "..", folder),
         filename: (request, file, callback) => {
-          const fileHash = import_crypto.default.randomBytes(16).toString("hex");
+          const fileHash = import_crypto.default
+            .randomBytes(16)
+            .toString("hex");
           const fileName = `${fileHash}-${file.originalname}`;
           return callback(null, fileName);
-        }
-      })
+        },
+      }),
     };
-  }
+  },
 };
 
 // src/routes.ts
@@ -610,35 +634,67 @@ router.get("/", (req, res) => {
 router.post("/users", new CreateUserController().handle);
 router.post("/session", new AuthUserController().handle);
 router.get("/me", isAuthenticated, new DetailUserController().handle);
-router.post("/category", isAuthenticated, new CreateCategoryController().handle);
+router.post(
+  "/category",
+  isAuthenticated,
+  new CreateCategoryController().handle
+);
 router.get("/category", isAuthenticated, new ListCategoryController().handle);
-router.post("/product", isAuthenticated, upload.single("file"), new CreateProductController().handle);
-router.get("/category/product", isAuthenticated, new ListByCategoryController().handle);
+router.post(
+  "/product",
+  isAuthenticated,
+  upload.single("file"),
+  new CreateProductController().handle
+);
+router.get(
+  "/category/product",
+  isAuthenticated,
+  new ListByCategoryController().handle
+);
 router.post("/order", isAuthenticated, new CreateOrderController().handle);
 router.delete("/order", isAuthenticated, new RemoveOrderController().handle);
 router.post("/order/add", isAuthenticated, new AddItemController().handle);
-router.delete("/order/remove", isAuthenticated, new RemoveItemController().handle);
+router.delete(
+  "/order/remove",
+  isAuthenticated,
+  new RemoveItemController().handle
+);
 router.put("/order/send", isAuthenticated, new SendOrderController().handle);
 router.get("/orders", isAuthenticated, new ListOrderController().handle);
-router.get("/order/detail", isAuthenticated, new DetailOrderController().handle);
-router.put("/order/finish", isAuthenticated, new FinishOrderController().handle);
+router.get(
+  "/order/detail",
+  isAuthenticated,
+  new DetailOrderController().handle
+);
+router.put(
+  "/order/finish",
+  isAuthenticated,
+  new FinishOrderController().handle
+);
 
 // src/server.ts
 var app = (0, import_express2.default)();
 app.use(import_express2.default.json());
 app.use((0, import_cors.default)());
 app.use(router);
-app.use("/files", import_express2.default.static(import_path2.default.resolve(__dirname, "../", "tmp")));
-var PORT = 3333;
+app.use(
+  "/files",
+  import_express2.default.static(
+    import_path2.default.resolve(__dirname, "../", "tmp")
+  )
+);
+var PORT = process.env.PORT || 3333;
 app.use((err, req, res, next) => {
   if (err instanceof Error) {
     return res.status(400).json({
-      error: err.message
+      error: err.message,
     });
   }
   return res.status(500).json({
     status: "error",
-    message: "Internal Server error."
+    message: "Internal Server error.",
   });
 });
-app.listen(PORT, () => console.log(`Servidor est\xE1 ouvindo na porta ${PORT}`));
+app.listen(PORT, () =>
+  console.log(`Servidor est\xE1 ouvindo na porta ${PORT}`)
+);
