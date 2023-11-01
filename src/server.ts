@@ -11,7 +11,7 @@ app.use(router);
 
 app.use('/files', express.static(path.resolve(__dirname, '../', 'tmp')));
 
-const PORT = process.env.PORT || 3333;
+const PORT = 3333;
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     if (err instanceof Error) {

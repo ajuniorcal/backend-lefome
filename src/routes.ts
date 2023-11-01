@@ -31,6 +31,10 @@ const router = Router();
 /* const upload = uploadConfig.upload("../tmp").storage; */
 const upload = multer(uploadConfig.upload("./tmp"));
 
+router.get("/", (req, res) => {
+    res.send("Bem vindo ao Lefome");
+  });
+
 /* ---- Rotas Usuários ---- */
 router.post('/users', new CreateUserController().handle)
 
