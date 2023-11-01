@@ -1,27 +1,83 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateOrderController = void 0;
-const CreateOderService_1 = require("../../services/order/CreateOderService");
-class CreateOrderController {
-    handle(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { table, name } = req.body;
-            const createOrderService = new CreateOderService_1.CreateOrderService();
-            const order = yield createOrderService.execute({
-                table,
-                name,
-            });
-            return res.json(order);
-        });
-    }
-}
-exports.CreateOrderController = CreateOrderController;
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+var __async = (__this, __arguments, generator) => {
+  return new Promise((resolve, reject) => {
+    var fulfilled = (value) => {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    };
+    var rejected = (value) => {
+      try {
+        step(generator.throw(value));
+      } catch (e) {
+        reject(e);
+      }
+    };
+    var step = (x) => x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
+    step((generator = generator.apply(__this, __arguments)).next());
+  });
+};
+
+// src/controllers/order/CreateOrderController.ts
+var CreateOrderController_exports = {};
+__export(CreateOrderController_exports, {
+  CreateOrderController: () => CreateOrderController
+});
+module.exports = __toCommonJS(CreateOrderController_exports);
+
+// src/prisma/index.ts
+var import_client = require("@prisma/client");
+var prismaClient = new import_client.PrismaClient();
+var prisma_default = prismaClient;
+
+// src/services/order/CreateOderService.ts
+var CreateOrderService = class {
+  execute(_0) {
+    return __async(this, arguments, function* ({ table, name }) {
+      const order = yield prisma_default.order.create({
+        data: {
+          table,
+          name
+        }
+      });
+      return order;
+    });
+  }
+};
+
+// src/controllers/order/CreateOrderController.ts
+var CreateOrderController = class {
+  handle(req, res) {
+    return __async(this, null, function* () {
+      const { table, name } = req.body;
+      const createOrderService = new CreateOrderService();
+      const order = yield createOrderService.execute({
+        table,
+        name
+      });
+      return res.json(order);
+    });
+  }
+};
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  CreateOrderController
+});

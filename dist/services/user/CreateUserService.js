@@ -1,51 +1,87 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+var __async = (__this, __arguments, generator) => {
+  return new Promise((resolve, reject) => {
+    var fulfilled = (value) => {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    };
+    var rejected = (value) => {
+      try {
+        step(generator.throw(value));
+      } catch (e) {
+        reject(e);
+      }
+    };
+    var step = (x) => x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
+    step((generator = generator.apply(__this, __arguments)).next());
+  });
+};
+
+// src/services/user/CreateUserService.ts
+var CreateUserService_exports = {};
+__export(CreateUserService_exports, {
+  CreateUserService: () => CreateUserService
+});
+module.exports = __toCommonJS(CreateUserService_exports);
+
+// src/prisma/index.ts
+var import_client = require("@prisma/client");
+var prismaClient = new import_client.PrismaClient();
+var prisma_default = prismaClient;
+
+// src/services/user/CreateUserService.ts
+var import_bcryptjs = require("bcryptjs");
+var CreateUserService = class {
+  execute(_0) {
+    return __async(this, arguments, function* ({ name, email, password }) {
+      if (!email) {
+        throw new Error("E-mail incorreto");
+      }
+      const userAlreadyExists = yield prisma_default.user.findFirst({
+        where: {
+          email
+        }
+      });
+      if (userAlreadyExists) {
+        throw new Error("Usu\xE1rio j\xE1 existe, bobalhon!");
+      }
+      const passwordHash = yield (0, import_bcryptjs.hash)(password, 8);
+      const user = yield prisma_default.user.create({
+        data: {
+          name,
+          email,
+          password: passwordHash
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true
+        }
+      });
+      return user;
     });
+  }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateUserService = void 0;
-const prisma_1 = __importDefault(require("../../prisma/"));
-const bcryptjs_1 = require("bcryptjs");
-class CreateUserService {
-    execute({ name, email, password }) {
-        return __awaiter(this, void 0, void 0, function* () {
-            /* Verifica se ele enviou um email  */
-            if (!email) {
-                throw new Error("E-mail incorreto");
-            }
-            /* Verifica se já existe cadastro com o mesmo e-mail */
-            const userAlreadyExists = yield prisma_1.default.user.findFirst({
-                where: {
-                    email: email
-                }
-            });
-            if (userAlreadyExists) {
-                throw new Error("Usuário já existe, bobalhon!");
-            }
-            const passwordHash = yield (0, bcryptjs_1.hash)(password, 8);
-            const user = yield prisma_1.default.user.create({
-                data: {
-                    name: name,
-                    email: email,
-                    password: passwordHash
-                },
-                select: {
-                    id: true,
-                    name: true,
-                    email: true
-                }
-            });
-            return user;
-        });
-    }
-}
-exports.CreateUserService = CreateUserService;
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  CreateUserService
+});
