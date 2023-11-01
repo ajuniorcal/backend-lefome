@@ -7,11 +7,9 @@
   },
   "license": "MIT",
   "scripts": {
-    "start": "node dist/server.js",
-    "dev": "ts-node-dev src/server.ts",
-    "migrate-deploy": "npx prisma migrate deploy",
-    "build": "tsc && npx prisma migrate deploy"
-    
+    "compile": "tsc",
+    "migrate": "npx prisma migrate deploy",
+    "build": "yarn compile && yarn migrate"
   }
   ,
   "devDependencies": {

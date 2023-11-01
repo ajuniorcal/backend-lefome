@@ -13,10 +13,9 @@ app.use(express_1.default.json());
 app.use((0, cors_1.default)());
 app.use(routes_1.router);
 app.use('/files', express_1.default.static(path_1.default.resolve(__dirname, '../', 'tmp')));
-const PORT = process.env.PORT || 3333;
-app.use((err, req, res, nex) => {
+const PORT = 3333;
+app.use((err, req, res, next) => {
     if (err instanceof Error) {
-        //Se for instancia de tipo error
         return res.status(400).json({
             error: err.message
         });
