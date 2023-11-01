@@ -628,9 +628,6 @@ var multer_default = {
 // src/routes.ts
 var router = (0, import_express.Router)();
 var upload = (0, import_multer2.default)(multer_default.upload("./tmp"));
-router.get("/", (req, res) => {
-  res.send("Bem vindo ao Lefome");
-});
 router.post("/users", new CreateUserController().handle);
 router.post("/session", new AuthUserController().handle);
 router.get("/me", isAuthenticated, new DetailUserController().handle);
